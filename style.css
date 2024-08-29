@@ -1,0 +1,12 @@
+/* largely unused. I hate frontend >:( */
+.static-size td, .static-size th {
+  width: 25%;
+  min-width: 10px; /* Add a minimum width to prevent resizing */
+}
+
+.static-size span {
+  display: inline-block;
+  width: 50px; /* Adjust the width as needed */
+  text-align: center;
+  margin: 0 auto; /* Center the span within the table cell */
+}

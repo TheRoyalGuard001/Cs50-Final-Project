@@ -1,0 +1,179 @@
+{% extends "template.html" %}
+
+{% block main %}
+    <!-- The canvas where everything is drawn on. 700x700 just looked nice. FYI, is not made with phones in mind -->
+    <canvas id="myCanvas" class="basic-canvas" width="700" height="700" style="border:1px solid #000000;"></canvas>
+    <br>
+    <button id="reset-button">Reset</button>
+    <br>
+    <!-- Each table acts as a form to submit individually. Just made backend eaiser to have them seperate -->
+    <form id="attraction-change-form">
+        <table class="table table-hover static-size">
+            <tr><td colspan="4"><strong>CHANGE ATTRACTIONS</strong></td></tr>
+            <tr>
+                <th>Main Group</th>
+                <th>Red Attraction</th>
+                <th>Green Attraction</th>
+                <th>Yellow Attraction</th>
+            </tr>
+            <tr>
+                <!-- Each group has a row with 3 sliders signifing the attraction between that group and the group of the column -->
+                <!-- There is some javaScript going up to update the <span> next to each slider (why is this not built in???) -->
+                <td>Red</td>
+                <td><input type="range" min="-100" max="100" value="0" name="red-red-attraction" oninput="updateValue(this.value, this.name)" class="static-size"></progress><span id="red-red-attractionValue" class="static-size">0</span>
+                <td><input type="range" min="-100" max="100" value="0" name="red-green-attraction" oninput="updateValue(this.value, this.name)" class="static-size"></progress><span id="red-green-attractionValue" class="static-size">0</span>
+                <td><input type="range" min="-100" max="100" value="0" name="red-yellow-attraction" oninput="updateValue(this.value, this.name)" class="static-size"></progress><span id="red-yellow-attractionValue" class="static-size">0</span>
+                </td>
+            <tr>
+                <td>Green</td>
+                <td><input type="range" min="-100" max="100" value="0" name="green-red-attraction" oninput="updateValue(this.value, this.name)" class="static-size"></progress><span id="green-red-attractionValue" class="static-size">0</span>
+                <td><input type="range" min="-100" max="100" value="0" name="green-green-attraction" oninput="updateValue(this.value, this.name)" class="static-size"></progress><span id="green-green-attractionValue" class="static-size">0</span>
+                <td><input type="range" min="-100" max="100" value="0" name="green-yellow-attraction" oninput="updateValue(this.value, this.name)" class="static-size"></progress><span id="green-yellow-attractionValue" class="static-size">0</span>
+                </td>
+            </tr>
+            <tr>
+                <td>Yellow</td>
+                <td><input type="range" min="-100" max="100" value="0" name="yellow-red-attraction" oninput="updateValue(this.value, this.name)" class="static-size"></progress><span id="yellow-red-attractionValue" class="static-size">0</span>
+                <td><input type="range" min="-100" max="100" value="0" name="yellow-green-attraction" oninput="updateValue(this.value, this.name)" class="static-size"></progress><span id="yellow-green-attractionValue" class="static-size">0</span>
+                <td><input type="range" min="-100" max="100" value="0" name="yellow-yellow-attraction" oninput="updateValue(this.value, this.name)" class="static-size"></progress><span id="yellow-yellow-attractionValue" class="static-size">0</span>
+                </td>
+            </tr>
+            </tr>
+                <td colspan="4"><button type="submit">Change Attractions</button></td>
+            </tr>
+        </table>
+    </form>
+
+    <form id="atom-change-form">
+        <br>
+        <table class="table table-hover">
+            <tr><td colspan="6"><strong>CHANGE ATOMS</strong></td></tr>
+            <tr>
+                <th>Group</th>
+                <th>Number of Atoms</th>
+                <th>Size</th>
+                <th>Range</th>
+                <th>Activate</th>
+            </tr>
+            <tr>
+                <!-- Each row allows you to update the values and activate each group -->
+                <!-- When the checkbox is filled, it overwrites the hidden element of the same name -->
+                <!-- We need this b/c w/o it, there will be no key to check in the backend leading to an error. Better to fix it here. -->
+                <td>Red</td>
+                <td><input type="number" name="red-number-form" min="0" max="500"></td>
+                <td><input type="number" name="red-size-form" min="1" max="50"></td>
+                <td><input type="number" name="red-range-form" min="1" max="1000"></td>
+                <input type="hidden" name="red-activate-form" value="off">
+                <td><input type="checkbox" name="red-activate-form"></td>
+            </tr>
+            <tr>
+                <td>Green</td>
+                <td><input type="number" name="green-number-form" min="0" max="500"></td>
+                <td><input type="number" name="green-size-form" min="1" max="50"></td>
+                <td><input type="number" name="green-range-form" min="1"max="1000"> </td>
+                <input type="hidden" name="green-activate-form" value="off">
+                <td><input type="checkbox" name="green-activate-form"></td>
+            </tr>
+            <tr>
+                <td>Yellow</td>
+                <td><input type="number" name="yellow-number-form" min="0" max="500"></td>
+                <td><input type="number" name="yellow-size-form" min="1" max="50"></td>
+                <td><input type="number" name="yellow-range-form" min="1" max="1000"></td>
+                <input type="hidden" name="yellow-activate-form" value="off">
+                <td><input type="checkbox" name="yellow-activate-form"></td>
+            </tr>
+            <tr>
+                <!-- Last row is dedicated to wall reflection -->
+                <!-- <td colspan="3"><input type="number" name="slow-form" placeholder="Slow (.01 step)" min="0" max="1" step="0.01" style="width: 50%;"></td>
+                 SLOW var discontinued since it made simulation less fun -->
+                <td colspan="3"><input type="number" name="reflection-strength" placeholder="Wall Bounce (max: 200)" min="0" max="200" step="1" style="width: 50%;"></td>
+                <td colspan="3"><input type="number" name="frame-rate-change" placeholder="Frame Rate (max 60)" min="0" max="60" step="1" style="width: 50%;"></td>
+            </tr>
+            <tr>
+                <td colspan="6"><button type="submit">Update Atoms</button></td>
+            </tr>
+        </table>
+        <br>
+    </form>
+{% endblock %}
+
+{% block script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+    // Time for the fun stuff!
+    const c = document.getElementById("myCanvas"); // Basic canvas setup
+    const ctx = c.getContext("2d")
+    const socket = io.connect('https://' + document.domain + ':' + location.port); // Basic SocketIO
+
+    // Basic onclick -> func
+    document.getElementById("reset-button").addEventListener('click', sendReset);
+
+    // Dealing with forms. Both are basically the same where we target the form ID and on submit,
+    // consolidate all the data to a dict and emit it over using socketIO
+    document.getElementById("atom-change-form").addEventListener('submit', function(event){
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const data = {};
+        formData.forEach((value, key) => {
+        data[key] = value;
+        });
+    socket.emit('atom-changes', data);
+    console.log('emited data: ', data)
+    });
+
+    // Here we take the values of the slider and / by 100 to get attraction b/c anything > 1 is a mess
+    // We also * by -1 b/c technically neg val is attraction and pos val is repulsion but thats unintuitive
+    document.getElementById("attraction-change-form").addEventListener('submit', function(event){
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const data = {};
+        formData.forEach((value, key) => {
+        data[key] = value/100 * -1;
+        });
+    socket.emit('attraction-changes', data);
+    console.log('emited data: ', data)
+    });
+
+    // This is where we recive the data being sent by the server
+    // First we clear the frame by wiping it and painting over black.
+    // Then we loop through and draw only those on screen (just in case some find their way off, we dont spend time on them)
+    function drawData(particles)
+    {
+        ctx.clearRect(0, 0, c.width, c.height);
+        ctx.fillStyle = "black";
+        ctx.fillRect(0,0,c.width, c.height);
+        particles.forEach(function(group) {
+            for (var i = 0; i < group.length; i++){
+                var x = group[i]['x'];
+                var y = group[i]['y'];
+                var size = group[i]['size'];
+                var color = group[i]['color'];
+                if (x >= 0 && x <= c.width && y >= 0 && y <= c.height) {
+                    ctx.fillStyle = color;
+                    ctx.fillRect(x, y, size, size);
+                }
+            }
+        });
+    }
+
+    socket.on('message', function(msg) {
+        try {
+            let atoms = JSON.parse(msg);
+            drawData(atoms[0]); // Assuming the first element of the array is the particles
+            console.log(atoms); // for debuging
+        } catch (e) {
+            console.error("Error parsing message:", e);
+        }
+    });
+
+
+    function sendReset(){ // This is the func connecting to rest button at the top
+        socket.emit('reset-page');
+    }
+
+    function updateValue(val, name) { // This updates the <span> next to each slider. Since each <span> is just the slider name + 'Value', we can find the right <span> to change by passing the anme of the slider as well
+        document.getElementById(name + 'Value').textContent = val;
+    }
+</script>
+
+{% endblock %}
